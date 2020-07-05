@@ -4,14 +4,13 @@ import os
 import sys
 import argparse
 import traceback
-import logging
 
 base_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 sys.path.insert(0, base_path)
 
-logging.basicConfig(format='%(asctime)s,%(msecs)03d (%(filename)s:%(lineno)d) %(levelname)s  - %(message)s', datefmt="%H:%M:%S")
-
 from oltpbench.test_oltpbench import TestOLTPBench
+from oltpbench.constants import LOG
+
 
 if __name__ == "__main__":
     aparser = argparse.ArgumentParser(description="Timeseries")
@@ -45,7 +44,7 @@ if __name__ == "__main__":
         oltpbench = TestOLTPBench(args)
         exit_code = oltpbench.run()
     except:
-        logging.error("Exception trying to run OLTP Bench tests")
+        LOG.error("Exception trying to run OLTP Bench tests")
         traceback.print_exc(file=sys.stdout)
         exit_code = 1
 
