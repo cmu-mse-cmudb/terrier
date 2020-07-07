@@ -2043,15 +2043,11 @@ void BytecodeGenerator::VisitBuiltinParamCall(ast::CallExpr *call, ast::Builtin 
 
 void BytecodeGenerator::VisitBuiltinStringCall(ast::CallExpr *call, ast::Builtin builtin) {
   LocalVar exec_ctx = VisitExpressionForRValue(call->Arguments()[0]);
+  LocalVar input_string = VisitExpressionForRValue(call->Arguments()[1]);
   LocalVar ret = ExecutionResult()->GetOrCreateDestination(call->GetType());
   switch (builtin) {
     case ast::Builtin::Lower: {
-      LocalVar input_string = VisitExpressionForRValue(call->Arguments()[1]);
       Emitter()->Emit(Bytecode::Lower, exec_ctx, ret, input_string);
-      break;
-    }
-    case ast::Builtin::Version: {
-      Emitter()->Emit(Bytecode::Version, exec_ctx, ret);
       break;
     }
     default:
@@ -2342,8 +2338,7 @@ void BytecodeGenerator::VisitBuiltinCallExpr(ast::CallExpr *call) {
       break;
     }
 
-    case ast::Builtin::Lower:
-    case ast::Builtin::Version: {
+    case ast::Builtin::Lower: {
       VisitBuiltinStringCall(call, builtin);
       break;
     }

@@ -32,6 +32,7 @@ TEST_F(TpccPlanDeliveryTests, DeliveryDeleteNewOrder) {
     EXPECT_EQ(plan->GetPlanNodeType(), planner::PlanNodeType::DELETE);
     auto del_plan = reinterpret_cast<planner::DeletePlanNode *>(plan.get());
     EXPECT_EQ(del_plan->GetDatabaseOid(), test->db_);
+    EXPECT_EQ(del_plan->GetNamespaceOid(), test->accessor_->GetDefaultNamespace());
     EXPECT_EQ(del_plan->GetTableOid(), tbl_oid);
     EXPECT_EQ(del_plan->GetOutputSchema()->GetColumns().size(), 0);
 
@@ -43,6 +44,7 @@ TEST_F(TpccPlanDeliveryTests, DeliveryDeleteNewOrder) {
     auto idx_scan = reinterpret_cast<const planner::IndexScanPlanNode *>(del_plan->GetChild(0));
     EXPECT_EQ(idx_scan->IsForUpdate(), true);
     EXPECT_EQ(idx_scan->GetDatabaseOid(), test->db_);
+    EXPECT_EQ(idx_scan->GetNamespaceOid(), test->accessor_->GetDefaultNamespace());
 
     // Check scan predicate binds tuples correctly
     auto scan_pred = idx_scan->GetScanPredicate();
@@ -109,6 +111,7 @@ TEST_F(TpccPlanDeliveryTests, DeliveryUpdateCarrierId) {
     EXPECT_EQ(plan->GetPlanNodeType(), planner::PlanNodeType::UPDATE);
     auto update = reinterpret_cast<planner::UpdatePlanNode *>(plan.get());
     EXPECT_EQ(update->GetDatabaseOid(), test->db_);
+    EXPECT_EQ(update->GetNamespaceOid(), test->accessor_->GetDefaultNamespace());
     EXPECT_EQ(update->GetTableOid(), test->tbl_order_);
     EXPECT_EQ(update->GetUpdatePrimaryKey(), false);
 
@@ -126,6 +129,7 @@ TEST_F(TpccPlanDeliveryTests, DeliveryUpdateCarrierId) {
     auto idx_scan = reinterpret_cast<const planner::IndexScanPlanNode *>(update->GetChild(0));
     EXPECT_EQ(idx_scan->IsForUpdate(), true);
     EXPECT_EQ(idx_scan->GetDatabaseOid(), test->db_);
+    EXPECT_EQ(idx_scan->GetNamespaceOid(), test->accessor_->GetDefaultNamespace());
 
     // IdxScan OutputSchema/ColumnIds
     auto idx_scan_schema = idx_scan->GetOutputSchema();
@@ -157,6 +161,7 @@ TEST_F(TpccPlanDeliveryTests, DeliveryUpdateDeliveryDate) {
     EXPECT_EQ(plan->GetPlanNodeType(), planner::PlanNodeType::UPDATE);
     auto update = reinterpret_cast<planner::UpdatePlanNode *>(plan.get());
     EXPECT_EQ(update->GetDatabaseOid(), test->db_);
+    EXPECT_EQ(update->GetNamespaceOid(), test->accessor_->GetDefaultNamespace());
     EXPECT_EQ(update->GetTableOid(), test->tbl_order_line_);
     EXPECT_EQ(update->GetUpdatePrimaryKey(), false);
 
@@ -175,6 +180,7 @@ TEST_F(TpccPlanDeliveryTests, DeliveryUpdateDeliveryDate) {
     auto idx_scan = reinterpret_cast<const planner::IndexScanPlanNode *>(update->GetChild(0));
     EXPECT_EQ(idx_scan->IsForUpdate(), true);
     EXPECT_EQ(idx_scan->GetDatabaseOid(), test->db_);
+    EXPECT_EQ(idx_scan->GetNamespaceOid(), test->accessor_->GetDefaultNamespace());
 
     // IdxScan OutputSchema/ColumnIds
     auto idx_scan_schema = idx_scan->GetOutputSchema();
@@ -236,6 +242,7 @@ TEST_F(TpccPlanDeliveryTests, DeliverySumOrderAmount) {
     auto idx_scan = reinterpret_cast<const planner::IndexScanPlanNode *>(aggr->GetChild(0));
     EXPECT_EQ(idx_scan->IsForUpdate(), false);
     EXPECT_EQ(idx_scan->GetDatabaseOid(), test->db_);
+    EXPECT_EQ(idx_scan->GetNamespaceOid(), test->accessor_->GetDefaultNamespace());
     test->CheckOids(idx_scan->GetColumnOids(), {schema.GetColumn("ol_amount").Oid(), schema.GetColumn("ol_o_id").Oid(),
                                                 schema.GetColumn("ol_d_id").Oid(), schema.GetColumn("ol_w_id").Oid()});
 
@@ -293,6 +300,7 @@ TEST_F(TpccPlanDeliveryTests, UpdateCustomBalanceDeliveryCount) {
     EXPECT_EQ(plan->GetPlanNodeType(), planner::PlanNodeType::UPDATE);
     auto update = reinterpret_cast<planner::UpdatePlanNode *>(plan.get());
     EXPECT_EQ(update->GetDatabaseOid(), test->db_);
+    EXPECT_EQ(update->GetNamespaceOid(), test->accessor_->GetDefaultNamespace());
     EXPECT_EQ(update->GetTableOid(), test->tbl_customer_);
     EXPECT_EQ(update->GetUpdatePrimaryKey(), false);
 
@@ -316,6 +324,7 @@ TEST_F(TpccPlanDeliveryTests, UpdateCustomBalanceDeliveryCount) {
     auto idx_scan = reinterpret_cast<const planner::IndexScanPlanNode *>(update->GetChild(0));
     EXPECT_EQ(idx_scan->IsForUpdate(), true);
     EXPECT_EQ(idx_scan->GetDatabaseOid(), test->db_);
+    EXPECT_EQ(idx_scan->GetNamespaceOid(), test->accessor_->GetDefaultNamespace());
 
     // IdxScan OutputSchema/ColumnIds -> match schema
     auto idx_scan_schema = idx_scan->GetOutputSchema();

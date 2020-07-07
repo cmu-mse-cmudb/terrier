@@ -434,7 +434,10 @@ TEST(PlanNodeJsonTest, DeletePlanNodeTest) {
   // Construct DeletePlanNode
   auto delete_pred = PlanNodeJsonTest::BuildDummyPredicate();
   DeletePlanNode::Builder builder;
-  auto plan_node = builder.SetDatabaseOid(catalog::db_oid_t(1)).SetTableOid(catalog::table_oid_t(2)).Build();
+  auto plan_node = builder.SetDatabaseOid(catalog::db_oid_t(1))
+                       .SetNamespaceOid(catalog::namespace_oid_t(0))
+                       .SetTableOid(catalog::table_oid_t(2))
+                       .Build();
 
   // Serialize to Json
   auto json = plan_node->ToJson();
@@ -562,8 +565,11 @@ TEST(PlanNodeJsonTest, DropTriggerPlanNodeTest) {
 TEST(PlanNodeJsonTest, DropViewPlanNodeTest) {
   // Construct DropViewPlanNode
   DropViewPlanNode::Builder builder;
-  auto plan_node =
-      builder.SetDatabaseOid(catalog::db_oid_t(11)).SetViewOid(catalog::view_oid_t(12)).SetIfExist(true).Build();
+  auto plan_node = builder.SetDatabaseOid(catalog::db_oid_t(11))
+                       .SetNamespaceOid(catalog::namespace_oid_t(0))
+                       .SetViewOid(catalog::view_oid_t(12))
+                       .SetIfExist(true)
+                       .Build();
 
   // Serialize to Json
   auto json = plan_node->ToJson();
@@ -641,6 +647,7 @@ TEST(PlanNodeJsonTest, IndexScanPlanNodeJsonTest) {
                        .SetIsForUpdateFlag(false)
                        .SetDatabaseOid(catalog::db_oid_t(0))
                        .SetIndexOid(catalog::index_oid_t(0))
+                       .SetNamespaceOid(catalog::namespace_oid_t(0))
                        .Build();
 
   // Serialize to Json
@@ -679,6 +686,7 @@ TEST(PlanNodeJsonTest, InsertPlanNodeJsonTest) {
   InsertPlanNode::Builder builder;
   auto plan_node = builder.SetOutputSchema(PlanNodeJsonTest::BuildDummyOutputSchema())
                        .SetDatabaseOid(catalog::db_oid_t(0))
+                       .SetNamespaceOid(catalog::namespace_oid_t(0))
                        .SetTableOid(catalog::table_oid_t(1))
                        .AddValues(get_values(0, 2))
                        .AddValues(get_values(1, 2))
@@ -703,6 +711,7 @@ TEST(PlanNodeJsonTest, InsertPlanNodeJsonTest) {
   InsertPlanNode::Builder builder2;
   auto plan_node2 = builder2.SetOutputSchema(PlanNodeJsonTest::BuildDummyOutputSchema())
                         .SetDatabaseOid(catalog::db_oid_t(0))
+                        .SetNamespaceOid(catalog::namespace_oid_t(0))
                         .SetTableOid(catalog::table_oid_t(1))
                         .AddValues(get_values(0, 3))
                         .AddValues(get_values(1, 3))
@@ -844,6 +853,7 @@ TEST(PlanNodeJsonTest, SeqScanPlanNodeJsonTest) {
                        .SetScanPredicate(common::ManagedPointer(scan_pred))
                        .SetIsForUpdateFlag(false)
                        .SetDatabaseOid(catalog::db_oid_t(0))
+                       .SetNamespaceOid(catalog::namespace_oid_t(0))
                        .SetTableOid(catalog::table_oid_t(0))
                        .Build();
 
@@ -885,6 +895,7 @@ TEST(PlanNodeJsonTest, UpdatePlanNodeJsonTest) {
   UpdatePlanNode::Builder builder;
   auto plan_node = builder.SetOutputSchema(PlanNodeJsonTest::BuildDummyOutputSchema())
                        .SetDatabaseOid(catalog::db_oid_t(1000))
+                       .SetNamespaceOid(catalog::namespace_oid_t(0))
                        .SetTableOid(catalog::table_oid_t(200))
                        .SetUpdatePrimaryKey(true)
                        .Build();

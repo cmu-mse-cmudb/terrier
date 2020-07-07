@@ -3,7 +3,6 @@
 #include <memory>
 #include <utility>
 #include <vector>
-
 #include "catalog/catalog_defs.h"
 #include "parser/expression/abstract_expression.h"
 #include "planner/plannodes/abstract_plan_node.h"
@@ -49,6 +48,15 @@ class AbstractScanPlanNode : public AbstractPlanNode {
       return *dynamic_cast<ConcreteType *>(this);
     }
 
+    /**
+     * @param namespace_oid namespace OID of table/index beind scanned
+     * @return builder object
+     */
+    ConcreteType &SetNamespaceOid(catalog::namespace_oid_t namespace_oid) {
+      namespace_oid_ = namespace_oid;
+      return *dynamic_cast<ConcreteType *>(this);
+    }
+
    protected:
     /**
      * Scan predicate
@@ -62,6 +70,11 @@ class AbstractScanPlanNode : public AbstractPlanNode {
      * Database OID for scan
      */
     catalog::db_oid_t database_oid_;
+
+    /**
+     * OID of namespace
+     */
+    catalog::namespace_oid_t namespace_oid_;
   };
 
   /**
@@ -71,15 +84,17 @@ class AbstractScanPlanNode : public AbstractPlanNode {
    * @param predicate predicate used for performing scan
    * @param is_for_update scan is used for an update
    * @param database_oid database oid for scan
+   * @param namespace_oid OID of the namespace
    */
   AbstractScanPlanNode(std::vector<std::unique_ptr<AbstractPlanNode>> &&children,
                        std::unique_ptr<OutputSchema> output_schema,
                        common::ManagedPointer<parser::AbstractExpression> predicate, bool is_for_update,
-                       catalog::db_oid_t database_oid)
+                       catalog::db_oid_t database_oid, catalog::namespace_oid_t namespace_oid)
       : AbstractPlanNode(std::move(children), std::move(output_schema)),
         scan_predicate_(predicate),
         is_for_update_(is_for_update),
-        database_oid_(database_oid) {}
+        database_oid_(database_oid),
+        namespace_oid_(namespace_oid) {}
 
  public:
   /**
@@ -107,6 +122,11 @@ class AbstractScanPlanNode : public AbstractPlanNode {
   catalog::db_oid_t GetDatabaseOid() const { return database_oid_; }
 
   /**
+   * @return namespace OID of index/table being scanned
+   */
+  catalog::namespace_oid_t GetNamespaceOid() const { return namespace_oid_; }
+
+  /**
    * @return the hashed value of this plan node
    */
   common::hash_t Hash() const override;
@@ -130,6 +150,11 @@ class AbstractScanPlanNode : public AbstractPlanNode {
    * Database OID for scan
    */
   catalog::db_oid_t database_oid_;
+
+  /**
+   * Namespace OID for scan
+   */
+  catalog::namespace_oid_t namespace_oid_;
 };
 
 }  // namespace terrier::planner

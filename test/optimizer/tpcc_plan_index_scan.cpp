@@ -36,6 +36,7 @@ TEST_F(TpccPlanIndexScanTests, SimplePredicateIndexScan) {
                     {schema.GetColumn("no_o_id").Oid(), schema.GetColumn("no_w_id").Oid()});
     EXPECT_EQ(index_plan->IsForUpdate(), false);
     EXPECT_EQ(index_plan->GetDatabaseOid(), test->db_);
+    EXPECT_EQ(index_plan->GetNamespaceOid(), test->accessor_->GetDefaultNamespace());
 
     auto scan_pred = index_plan->GetScanPredicate();
     EXPECT_TRUE(scan_pred != nullptr);
@@ -70,6 +71,7 @@ TEST_F(TpccPlanIndexScanTests, SimplePredicateFlippedIndexScan) {
                     {schema.GetColumn("no_o_id").Oid(), schema.GetColumn("no_w_id").Oid()});
     EXPECT_EQ(index_plan->IsForUpdate(), false);
     EXPECT_EQ(index_plan->GetDatabaseOid(), test->db_);
+    EXPECT_EQ(index_plan->GetNamespaceOid(), test->accessor_->GetDefaultNamespace());
 
     auto scan_pred = index_plan->GetScanPredicate();
     EXPECT_TRUE(scan_pred != nullptr);
@@ -103,6 +105,7 @@ TEST_F(TpccPlanIndexScanTests, IndexFulfillSort) {
     test->CheckOids(index_plan->GetColumnOids(), {schema.GetColumn("no_o_id").Oid()});
     EXPECT_EQ(index_plan->IsForUpdate(), false);
     EXPECT_EQ(index_plan->GetDatabaseOid(), test->db_);
+    EXPECT_EQ(index_plan->GetNamespaceOid(), test->accessor_->GetDefaultNamespace());
     EXPECT_EQ(index_plan->GetScanPredicate().Get(), nullptr);
   };
 
@@ -141,6 +144,7 @@ TEST_F(TpccPlanIndexScanTests, IndexFulfillSortAndPredicate) {
                     {schema.GetColumn("no_o_id").Oid(), schema.GetColumn("no_w_id").Oid()});
     EXPECT_EQ(index_plan->IsForUpdate(), false);
     EXPECT_EQ(index_plan->GetDatabaseOid(), test->db_);
+    EXPECT_EQ(index_plan->GetNamespaceOid(), test->accessor_->GetDefaultNamespace());
 
     // Check Index Scan Predicate
     auto scan_pred = index_plan->GetScanPredicate();
@@ -204,6 +208,7 @@ TEST_F(TpccPlanIndexScanTests, IndexFulfillSortAndPredicateWithLimitOffset) {
 
     EXPECT_EQ(index_plan->IsForUpdate(), false);
     EXPECT_EQ(index_plan->GetDatabaseOid(), test->db_);
+    EXPECT_EQ(index_plan->GetNamespaceOid(), test->accessor_->GetDefaultNamespace());
 
     // Check Index Scan Predicate
     auto scan_pred = index_plan->GetScanPredicate();
