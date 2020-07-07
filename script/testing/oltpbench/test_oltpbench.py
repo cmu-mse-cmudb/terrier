@@ -181,12 +181,12 @@ class TestOLTPBench(TestServer):
         # easier to determine whether or not we are crazy when running Jenkins.
         if not os.path.exists(self.test_histogram_path):
             LOG.error("Unable to find OLTP-Bench result file '{}'".format(self.test_histogram_path))
-            print("=" * 50)
-            print("Directory Contents: {}".format(
+            LOG.error("=" * 50)
+            LOG.error("Directory Contents: {}".format(
                 os.path.dirname(self.test_histogram_path)))
-            print("\n".join(
+            LOG.error("\n".join(
                 os.listdir(os.path.dirname(self.test_histogram_path))))
-            print("=" * 50)
+            LOG.error("=" * 50)
             raise RuntimeError()
             
         with open(self.test_histogram_path) as oltp_result_file:
