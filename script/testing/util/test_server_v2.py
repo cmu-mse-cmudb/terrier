@@ -12,7 +12,6 @@ from util import constants
 from util.test_case import TestCase
 from util.common import *
 
-
 class TestServerV2:
     """ Class to run general tests """
 
@@ -93,6 +92,7 @@ class TestServerV2:
                 break
             except:
                 self.stop_db()
+                #TODO use Ben's new logging function
                 print("+" * 100)
                 print("DATABASE OUTPUT")
                 self.print_output(self.db_output_file)
@@ -148,6 +148,9 @@ class TestServerV2:
 
     def stop_db(self):
         """ Stop the Db server and print it's log file """
+        if not self.db_process:
+            return
+
         # get exit code, if any
         self.db_process.poll()
         if self.db_process.returncode is not None:
@@ -160,7 +163,14 @@ class TestServerV2:
 
         # still (correctly) running, terminate it
         self.db_process.terminate()
+        self.db_process = None
+
         return
+
+    def restart_db(self):
+        """ Restart the DB """
+        self.stop_db()
+        self.run_db()
 
     def print_output(self, filename):
         """ Print out contents of a file """
@@ -173,6 +183,10 @@ class TestServerV2:
 
     def run_test(self, test_case: TestCase):
         """ Run the tests """
+        if not test_case.test_command or not test_case.test_command_cwd:
+            msg = "test command should be provided"
+            raise RuntimeError(msg) 
+
         # run the pre test tasks
         test_case.run_pre_test()
 
@@ -192,32 +206,44 @@ class TestServerV2:
 
     def run(self, test_suite):
         """ Orchestrate the overall test execution """
-        ret_val = None
+        ret_val_test_suite = None
         try:
             self.check_db_binary()
             self.run_pre_suite()
 
+            # store each test case's result
+            ret_val_list_test_case = {}
             for test_case in test_suite:
-                if test_case.test_fresh_db_on_start:
+                if test_case.db_restart:
+                    # for each test case, it can tell the test server whether it wants a fersh db or a used one
+                    self.restart_db()
+                elif not self.db_process:
+                    # if there is no running db, we create one
                     self.run_db()
 
                 ret_val = self.run_test(test_case)
 
                 self.print_output(test_case.test_output_file)
 
-                if test_case.test_stop_db_on_finish:
-                    self.stop_db()
+                ret_val_list_test_case[test_case] = ret_val
 
-                if ret_val is None or ret_val != constants.ErrorCode.SUCCESS:
+            # parse all test cases result
+            # currently, we only want to know if there is an error one
+            for test_case, test_result in ret_val_list_test_case.items():
+                if test_result is None or test_result != constants.ErrorCode.SUCCESS:
+                    ret_val_test_suite = constants.ErrorCode.ERROR
                     break
+            else:
+                # loop fell through without finding an error
+                ret_val_test_suite = constants.ErrorCode.SUCCESS
         except:
             traceback.print_exc(file=sys.stdout)
-            ret_val = constants.ErrorCode.ERROR
+            ret_val_test_suite = constants.ErrorCode.ERROR
         finally:
             # after the test suite finish, stop the database instance
             self.stop_db()
 
-        if ret_val is None or ret_val != constants.ErrorCode.SUCCESS:
+        if ret_val_test_suite is None or ret_val_test_suite != constants.ErrorCode.SUCCESS:
             # print the db log file, only if we had a failure
             self.print_output(self.db_output_file)
-        return ret_val
+        return ret_val_test_suite
