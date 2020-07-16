@@ -46,7 +46,7 @@ class TestCaseOLTP(TestCase):
         self.db_execute = args.get("db_execute",constants.OLTP_DEFAULT_DATABASE_EXECUTE)
         self.buckets = args.get("buckets",constants.OLTP_DEFAULT_BUCKETS)
 
-        self.is_publish_results = args.get("publish_results",False)
+        self.publish_results = args.get("publish_results",constants.OLTP_DEFAULT_REPORT_SERVER)
 
     def init_test_case(self):
         # oltpbench xml file paths
@@ -110,11 +110,13 @@ class TestCaseOLTP(TestCase):
         self.create_result_dir()
 
     def run_post_test(self):
-        # validate the OLTP result
         try:
+            # validate the OLTP result
             self.validate_result()
-            if self.is_publish_results:
-                report(os.path.join(
+
+            # publish results
+            if self.publish_results:
+                report(self.publish_results, os.path.join(
                     os.getcwd(), "oltp_result",self.filename_suffix))
         except:
             traceback.print_exc(file=sys.stdout)

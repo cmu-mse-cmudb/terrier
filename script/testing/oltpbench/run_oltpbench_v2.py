@@ -12,6 +12,7 @@ sys.path.insert(0, base_path)
 from oltpbench.test_case_oltp import TestCaseOLTP
 from oltpbench.test_oltpbench_v2 import TestOLTPBenchV2
 from oltpbench.utils import parse_command_line_args
+from oltpbench import constants
 
 def generate_test_suite(args):
     args_configfile = args.get("config_file")
@@ -37,12 +38,13 @@ def generate_test_suite(args):
             args_configfile)
         raise TypeError(msg)
 
+    # publish test results to the server
+    oltp_report_server = constants.PERFORMANCE_STORAGE_SERVICE_API[args.get("publish_results")]
+
     for oltp_testcase in oltp_test_suite_json.get("testcases", []):
         oltp_testcase_base = oltp_testcase.get("base")
-        # The below is a hack while Yao is making updates. There is a better way to do this.
-        oltp_testcase_base = {'publish_results': args.get(
-            "publish_results"), **oltp_testcase_base}
 
+        oltp_testcase_base["publish_results"] = oltp_report_server
         oltp_testcase_loop = oltp_testcase.get("loop")
 
         # if need to loop over parameters, for example terminals = 1,2,4,8,16

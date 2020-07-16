@@ -2,6 +2,8 @@
 
 import argparse
 
+from oltpbench import constants
+
 def parse_command_line_args():
     '''Command line argument parsing methods'''
 
@@ -16,7 +18,11 @@ def parse_command_line_args():
                          default="debug",
                          choices=["debug", "release", "relwithdebinfo"],
                          help="Build type (default: %(default)s")
-    aparser.add_argument("--publish-results", action='store_true',
+    
+    public_report_server_list = constants.PERFORMANCE_STORAGE_SERVICE_API.keys()
+    aparser.add_argument("--publish-results",
+                         default="none",
+                         choices=public_report_server_list,
                          help="Stores performance results in TimeScaleDB")
 
     args = vars(aparser.parse_args())

@@ -27,6 +27,7 @@ OLTP_DEFAULT_DATABASE_RESTART = True
 OLTP_DEFAULT_DATABASE_CREATE = True
 OLTP_DEFAULT_DATABASE_LOAD= True
 OLTP_DEFAULT_DATABASE_EXECUTE= True
+OLTP_DEFAULT_REPORT_SERVER = None
 
 OLTP_DIR_CONFIG = os.path.join(OLTP_GIT_LOCAL_PATH, "config")
 OLTP_DIR_TEST_RESULT = os.path.join(OLTP_GIT_LOCAL_PATH, "results")
@@ -45,5 +46,9 @@ OLTP_ANT_COMMANDS = [
 ]
 
 # Performance Storage Service
-PERFORMANCE_STORAGE_SERVICE_API = "http://incrudibles-testing.db.pdl.cmu.edu/performance-results"
-# TODO: Is there a good way to switch environments so we dont accidentally commit to production DB when runnings tests
+PERFORMANCE_STORAGE_SERVICE_API = {
+    "none":"",
+    "test":"http://incrudibles-testing.db.pdl.cmu.edu/performance-results",
+    "staging":"http://incrudibles-testing.db.pdl.cmu.edu/performance-results",
+    "prod":"http://incrudibles-testing.db.pdl.cmu.edu/performance-results"
+}
