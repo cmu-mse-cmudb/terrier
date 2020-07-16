@@ -50,9 +50,8 @@ def generate_test_suite(args):
         # if need to loop over parameters, for example terminals = 1,2,4,8,16
         if oltp_testcase_loop:
             for loop_item in oltp_testcase_loop:
-                for loop_item_key in loop_item.keys():
-                    oltp_testcase_base[loop_item_key] = loop_item[loop_item_key]                
-                oltp_test_suite.append(TestCaseOLTP(oltp_testcase_base)) 
+                oltp_testcase_combined = {**oltp_testcase_base,**loop_item}             
+                oltp_test_suite.append(TestCaseOLTP(oltp_testcase_combined)) 
 
         else:
             # there is no loop
