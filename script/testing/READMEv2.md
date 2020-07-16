@@ -9,8 +9,9 @@
 ## Util
 `util` folder contains a list of common Python scripts
 - `TestServer`: the base class for running all types of tests
-- `TestJUnit`: the test class for running junit tests
-- `TestOLTPBench`: the test class for configuring oltp and running oltp bench tests
+- `TestCase`: the base class for all types of tests
+- `TestJUnit`: the test class for junit tests
+- `TestOLTPBench`: the test class for oltp bench tests
 - `constants`: all the constants used in the any file under the `util`
 
 ## How to run a test
@@ -57,6 +58,3 @@ All test cases should inherit from the `TestCase` class. Anyone is free to modif
     - config the xml file, etc.
   - `run_post_test`: the post-test tasks required for the test
     - e.g. parse the output json, etc.
-
-### Configuration file 
-TODO
