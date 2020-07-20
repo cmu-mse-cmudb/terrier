@@ -49,6 +49,6 @@ OLTP_ANT_COMMANDS = [
 PERFORMANCE_STORAGE_SERVICE_API = {
     "none":"",
     "test":"http://incrudibles-testing.db.pdl.cmu.edu/performance-results",
-    "staging":"http://incrudibles-testing.db.pdl.cmu.edu/performance-results",
+    "staging":"http://incrudibles-staging.db.pdl.cmu.edu/performance-results",
     "prod":"http://incrudibles-testing.db.pdl.cmu.edu/performance-results"
 }
