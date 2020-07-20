@@ -13,6 +13,7 @@ from oltpbench.test_case_oltp import TestCaseOLTP
 from oltpbench.test_oltpbench_v2 import TestOLTPBenchV2
 from oltpbench.utils import parse_command_line_args
 from oltpbench import constants
+from util.constants import LOG
 
 def generate_test_suite(args):
     args_configfile = args.get("config_file")
@@ -70,7 +71,7 @@ if __name__ == "__main__":
         oltpbench = TestOLTPBenchV2(args)
         exit_code = oltpbench.run(test_suite)
     except:
-        print("Exception trying to run OLTP Bench tests")
+        LOG.error("Exception trying to run OLTP Bench tests")
         traceback.print_exc(file=sys.stdout)
         exit_code = 1
 
