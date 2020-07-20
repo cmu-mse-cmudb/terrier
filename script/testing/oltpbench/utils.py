@@ -24,6 +24,12 @@ def parse_command_line_args():
                          default="none",
                          choices=public_report_server_list,
                          help="Stores performance results in TimeScaleDB")
+    aparser.add_argument("--publish-username", 
+                        default="none",
+                        help="Publish Username")
+    aparser.add_argument("--publish-password", 
+                        default="none",
+                        help="Publish password")
 
     args = vars(aparser.parse_args())
 

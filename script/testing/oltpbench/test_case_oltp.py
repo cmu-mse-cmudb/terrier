@@ -47,6 +47,8 @@ class TestCaseOLTP(TestCase):
         self.buckets = args.get("buckets",constants.OLTP_DEFAULT_BUCKETS)
 
         self.publish_results = args.get("publish_results",constants.OLTP_DEFAULT_REPORT_SERVER)
+        self.publish_username = args.get("publish_username")
+        self.publish_password = args.get("publish_password")
 
     def init_test_case(self):
         # oltpbench xml file paths
@@ -117,7 +119,7 @@ class TestCaseOLTP(TestCase):
             # publish results
             if self.publish_results:
                 report(self.publish_results, os.path.join(
-                    os.getcwd(), "oltp_result",self.filename_suffix))
+                    os.getcwd(), "oltp_result",self.filename_suffix),self.publish_username,self.publish_password,self.query_mode)
         except:
             traceback.print_exc(file=sys.stdout)
             return ErrorCode.ERROR

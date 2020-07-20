@@ -41,11 +41,15 @@ def generate_test_suite(args):
 
     # publish test results to the server
     oltp_report_server = constants.PERFORMANCE_STORAGE_SERVICE_API[args.get("publish_results")]
+    oltp_report_username = args.get("publish_username")
+    oltp_report_password= args.get("publish_password")
 
     for oltp_testcase in oltp_test_suite_json.get("testcases", []):
         oltp_testcase_base = oltp_testcase.get("base")
 
         oltp_testcase_base["publish_results"] = oltp_report_server
+        oltp_testcase_base["publish_username"] = oltp_report_username
+        oltp_testcase_base["publish_password"] = oltp_report_password
         oltp_testcase_loop = oltp_testcase.get("loop")
 
         # if need to loop over parameters, for example terminals = 1,2,4,8,16

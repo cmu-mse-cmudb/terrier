@@ -19,7 +19,7 @@ def parse_config_file(path):
     """
     config_root = xml.parse(path).getroot()
     return {
-        'duration': int(parse_client_time(config_root)), # The current API uses duration. When we update the schema we can flip this back
+        'client_time': int(parse_client_time(config_root)), # The current API uses duration. When we update the schema we can flip this back
         #'client_time': int(parse_client_time(config_root)),
         'transaction_weights': parse_transaction_weights(config_root)
     }
