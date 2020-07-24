@@ -32,7 +32,7 @@ def parse_summary_file(path):
 def parse_metadata(summary):
     return {
         'noisepage':{
-            'version': summary.get('DBMS Version', UNKNOWN_RESULT)
+            'db_version': summary.get('DBMS Version', UNKNOWN_RESULT)
         }
     }
 
