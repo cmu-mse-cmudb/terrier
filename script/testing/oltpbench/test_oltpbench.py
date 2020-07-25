@@ -8,7 +8,7 @@ import shutil
 from util.constants import ErrorCode
 from util.constants import LOG
 from util.common import run_command
-from util.test_server_v2 import TestServerV2
+from util.test_server import TestServerV2
 from xml.etree import ElementTree
 from oltpbench import constants
 

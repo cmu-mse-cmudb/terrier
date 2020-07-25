@@ -10,7 +10,7 @@ base_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 sys.path.insert(0, base_path)
 
 from oltpbench.test_case_oltp import TestCaseOLTP
-from oltpbench.test_oltpbench_v2 import TestOLTPBenchV2
+from oltpbench.test_oltpbench import TestOLTPBenchV2
 from oltpbench.utils import parse_command_line_args
 from oltpbench import constants
 from util.constants import LOG

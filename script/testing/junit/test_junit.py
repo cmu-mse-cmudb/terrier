@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import os
 from junit import constants
-from util.test_server_v2 import TestServerV2
+from util.test_server import TestServerV2
 
 
 class TestJUnit(TestServerV2):
