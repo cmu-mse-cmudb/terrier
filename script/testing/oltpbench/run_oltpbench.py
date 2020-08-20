@@ -61,7 +61,7 @@ def generate_test_suite(args):
         args["server_args"] = server_args
 
     # read metadata in config file
-    server_data = oltp_test_suite_json.get("env")
+    server_data = oltp_test_suite_json.get("env",{})
     server_data["max_connection_threads"] = max_connection_threads
     
     # publish test results to the server
