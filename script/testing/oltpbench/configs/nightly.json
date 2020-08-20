@@ -3,6 +3,9 @@
     "server_args":{
         "wal_file_path": "/mnt/ramdisk/wal.log"
     },
+    "env":{
+        "wal_device":"RAM disk"
+    },
     "testcases": [
         {
             "base": {
