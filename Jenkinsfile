@@ -106,6 +106,7 @@ pipeline {
                         ''', label: 'Compiling'
 
                         sh 'cd build && make check-clang-tidy'
+                        sh 'cd build && gtimeout 10s sudo python3 ../script/testing/kill_server.py 15721'
                         sh 'cd build && gtimeout 1h make unittest'
                         sh 'cd build && gtimeout 1h make check-tpl'
                         sh script: 'cd build && timeout 20m python3 ../script/testing/junit/run_junit.py --build-type=debug --query-mode=simple', label: 'UnitTest (Simple)'
@@ -141,6 +142,7 @@ pipeline {
                         ''', label: 'Compiling'
 
                         sh 'cd build && make check-clang-tidy'
+                        sh 'cd build && timeout 10s sudo python3 ../script/testing/kill_server.py 15721'
                         sh 'cd build && timeout 1h make unittest'
                         sh 'cd build && timeout 1h make check-tpl'
                         sh script: 'cd build && timeout 20m python3 ../script/testing/junit/run_junit.py --build-type=debug --query-mode=simple', label: 'UnitTest (Simple)'
@@ -172,6 +174,7 @@ pipeline {
                         sh 'echo y | sudo ./script/installation/packages.sh all'
                         sh 'mkdir build'
                         sh 'cd build && cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=Debug -DTERRIER_USE_ASAN=OFF -DTERRIER_BUILD_BENCHMARKS=OFF -DTERRIER_GENERATE_COVERAGE=ON .. && make -j$(nproc)'
+                        sh 'cd build && timeout 10s sudo python3 ../script/testing/kill_server.py 15721'
                         sh 'cd build && timeout 1h make unittest'
                         sh 'cd build && timeout 1h make check-tpl'
                         sh 'cd build && timeout 20m python3 ../script/testing/junit/run_junit.py --build-type=debug --query-mode=simple'
@@ -223,6 +226,7 @@ pipeline {
                         ''', label: 'Compiling'
 
                         sh 'cd build && make check-clang-tidy'
+                        sh 'cd build && timeout 10s sudo python3 ../script/testing/kill_server.py 15721'
                         sh 'cd build && timeout 1h make unittest'
                         sh 'cd build && timeout 1h make check-tpl'
                         sh script: 'cd build && timeout 20m python3 ../script/testing/junit/run_junit.py --build-type=debug --query-mode=simple', label: 'UnitTest (Simple)'
@@ -258,6 +262,7 @@ pipeline {
                         make -j4
                         ''', label: 'Compiling'
 
+                        sh 'cd build && timeout 10s sudo python3 ../script/testing/kill_server.py 15721'
                         sh 'cd build && gtimeout 1h make unittest'
                         sh 'cd build && gtimeout 1h make check-tpl'
                         sh script: 'cd build && timeout 20m python3 ../script/testing/junit/run_junit.py --build-type=release --query-mode=simple', label: 'UnitTest (Simple)'
@@ -292,6 +297,7 @@ pipeline {
                         make -j$(nproc)
                         ''', label: 'Compiling'
 
+                        sh 'cd build && timeout 10s sudo python3 ../script/testing/kill_server.py 15721'
                         sh 'cd build && timeout 1h make unittest'
                         sh 'cd build && timeout 1h make check-tpl'
                         sh script: 'cd build && timeout 20m python3 ../script/testing/junit/run_junit.py --build-type=release --query-mode=simple', label: 'UnitTest (Simple)'
@@ -330,6 +336,7 @@ pipeline {
                         make -j$(nproc)
                         ''', label: 'Compiling'
 
+                        sh 'cd build && timeout 10s sudo python3 ../script/testing/kill_server.py 15721'
                         sh 'cd build && timeout 1h make unittest'
                         sh 'cd build && timeout 1h make check-tpl'
                         sh script: 'cd build && timeout 20m python3 ../script/testing/junit/run_junit.py --build-type=release --query-mode=simple', label: 'UnitTest (Simple)'
