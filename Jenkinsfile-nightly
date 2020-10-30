@@ -57,24 +57,27 @@ pipeline {
                 sh script:'''
                 mkdir build
                 cd build
-                cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=Release -DTERRIER_USE_ASAN=OFF -DTERRIER_USE_JEMALLOC=ON -DTERRIER_BUILD_TESTS=OFF .. 
-                make -j$(nproc) terrier
-                ''', label: 'Compiling'
+                cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=Release -DNOISEPAGE_USE_ASAN=OFF -DNOISEPAGE_USE_JEMALLOC=ON -DNOISEPAGE_BUILD_TESTS=OFF ..
+                ninja noisepage''', label: 'Compiling'
 
-                sh script:'''
-                cd build
-                timeout 3h python3 ../script/testing/oltpbench/run_oltpbench.py --config-file=../script/testing/oltpbench/configs/nightly/nightly.json --build-type=release --publish-results=prod --publish-username=${PSS_CREATOR_USR} --publish-password=${PSS_CREATOR_PSW}
-                ''', label: 'OLTPBench (HDD WAL)'
-
-                sh script:'''
-                cd build
-                timeout 3h python3 ../script/testing/oltpbench/run_oltpbench.py --config-file=../script/testing/oltpbench/configs/nightly/nightly_ramdisk.json --build-type=release --publish-results=prod --publish-username=${PSS_CREATOR_USR} --publish-password=${PSS_CREATOR_PSW}
-                ''', label: 'OLTPBench (RamDisk WAL)'
-
-                sh script:'''
-                cd build
-                timeout 3h python3 ../script/testing/oltpbench/run_oltpbench.py --config-file=../script/testing/oltpbench/configs/nightly/nightly_wal_disabled.json --build-type=release --publish-results=prod --publish-username=${PSS_CREATOR_USR} --publish-password=${PSS_CREATOR_PSW}
-                ''', label: 'OLTPBench (No WAL)'
+                catchError(stageResult: 'Failure'){
+                    sh script:'''
+                    cd build
+                    timeout 3h python3 ../script/testing/oltpbench/run_oltpbench.py --config-file=../script/testing/oltpbench/configs/nightly/nightly.json --build-type=release --publish-results=prod --publish-username=${PSS_CREATOR_USR} --publish-password=${PSS_CREATOR_PSW}
+                    ''', label: 'OLTPBench (HDD WAL)'
+                }
+                catchError(stageResult: 'Failure'){
+                    sh script:'''
+                    cd build
+                    timeout 3h python3 ../script/testing/oltpbench/run_oltpbench.py --config-file=../script/testing/oltpbench/configs/nightly/nightly_ramdisk.json --build-type=release --publish-results=prod --publish-username=${PSS_CREATOR_USR} --publish-password=${PSS_CREATOR_PSW}
+                    ''', label: 'OLTPBench (RamDisk WAL)'
+                }
+                catchError(stageResult: 'Failure'){
+                    sh script:'''
+                    cd build
+                    timeout 3h python3 ../script/testing/oltpbench/run_oltpbench.py --config-file=../script/testing/oltpbench/configs/nightly/nightly_wal_disabled.json --build-type=release --publish-results=prod --publish-username=${PSS_CREATOR_USR} --publish-password=${PSS_CREATOR_PSW}
+                    ''', label: 'OLTPBench (No WAL)'
+                }
 
                 archiveArtifacts(artifacts: 'build/oltp_result/**/*.*', excludes: 'build/oltp_result/**/*.csv', fingerprint: true)
             }
@@ -94,16 +97,15 @@ pipeline {
                 sh script:'''
                 mkdir build
                 cd build
-                cmake -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=Release -DTERRIER_USE_ASAN=OFF -DTERRIER_USE_JEMALLOC=ON -DTERRIER_BUILD_TESTS=OFF ..
-                make -j$(nproc) all
-                ''', label: 'Compiling'
+                cmake -GNinja -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=Release -DNOISEPAGE_USE_ASAN=OFF -DNOISEPAGE_USE_JEMALLOC=ON -DNOISEPAGE_BUILD_TESTS=OFF ..
+                ninja''', label: 'Compiling'
 
                 // The micro_bench configuration has to be consistent because we currently check against previous runs with the same config
                 //  # of Threads: 4
                 //  WAL Path: Ramdisk
                 sh script:'''
                 cd script/testing
-                python3 micro_bench/run_micro_bench.py --run --num-threads=4 --benchmark-path $(pwd)/../../build/release --logfile-path=/mnt/ramdisk/benchmark.log --publish-results=prod --publish-username=${PSS_CREATOR_USR} --publish-password=${PSS_CREATOR_PSW}
+                python3 microbench/run_microbench.py --run --num-threads=4 --benchmark-path $(pwd)/../../build/benchmark --logfile-path=/mnt/ramdisk/benchmark.log --publish-results=prod --publish-username=${PSS_CREATOR_USR} --publish-password=${PSS_CREATOR_PSW}
                 ''', label:'Microbenchmark'
 
                 archiveArtifacts 'script/testing/*.json'
