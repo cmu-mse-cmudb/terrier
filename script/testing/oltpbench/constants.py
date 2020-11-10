@@ -7,7 +7,7 @@ from util.constants import DIR_TMP
 OLTPBENCH_GIT_URL = "https://github.com/oltpbenchmark/oltpbench.git"
 OLTPBENCH_GIT_LOCAL_PATH = os.path.join(DIR_TMP, "oltpbench")
 OLTPBENCH_GIT_CLEAN_COMMAND = "rm -rf {}".format(OLTPBENCH_GIT_LOCAL_PATH)
-OLTPBENCH_GIT_COMMAND = "git clone {} {}".format(OLTPBENCH_GIT_URL, OLTPBENCH_GIT_LOCAL_PATH)
+OLTPBENCH_GIT_COMMAND = "git clone {} {} && git checkout OLTP-Bench-II".format(OLTPBENCH_GIT_URL, OLTPBENCH_GIT_LOCAL_PATH)
 
 # oltp default settings
 OLTPBENCH_DEFAULT_TIME = 30
