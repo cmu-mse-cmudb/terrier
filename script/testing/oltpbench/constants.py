@@ -49,6 +49,15 @@ OLTPBENCH_ANT_COMMANDS = [
     OLTPBENCH_ANT_CLEAN, OLTPBENCH_ANT_COMMAND_BUILD
 ]
 
+# MVN commands for OLTP-II
+OLTPBENCH_II_VERSION = '20.1.3'
+OLTPBENCH_II_BIN ='java -jar oltpbench2.jar',
+OLTPBENCH_MVN_BUILD = "./mvnw clean package"
+OLTPBENCH_MVN_CD_TARGET = "cd target"
+OLTPBENCH_MVN_UNZIP = "unzip oltpbench2-" + OLTPBENCH_II_VERSION + "-SNAPSHOT.zip"
+OLTPBENCH_MVN_CD_OLTP = "cd oltpbench2-" + OLTPBENCH_II_VERSION + "-SNAPSHOT"
+OLTPBENCH_MVN_COMMANDS = [OLTPBENCH_MVN_BUILD, OLTPBENCH_MVN_CD_TARGET, OLTPBENCH_MVN_UNZIP, OLTPBENCH_MVN_CD_OLTP]
+
 # API endpoints for Performance Storage Service
 # Each pair represents different environment. One could choose where the benchmark testing result will be uploaded to
 # The default is none, which means that the testing result won't be uploaded to any server

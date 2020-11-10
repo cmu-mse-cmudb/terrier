@@ -97,11 +97,11 @@ def parse_oltpbench_files(results_dir):
         parameters (dict): Information about the parameters with which the test was run.
         metrics (dict): The summary measurements that were gathered from the test.
     """
-    config_parameters = parse_config_file(results_dir + '/oltpbench.expconfig')
+    config_parameters = parse_config_file(results_dir + '/config.xml')
     metadata, timestamp, type, summary_parameters, metrics = parse_summary_file(
-        results_dir + '/oltpbench.summary')
+        results_dir + '/summary.json')
     metrics['incremental_metrics'] = parse_res_file(
-        results_dir + '/oltpbench.res')
+        results_dir + '/results.csv')
     parameters = {**summary_parameters, **config_parameters}
     return metadata, timestamp, type, parameters, metrics
 
