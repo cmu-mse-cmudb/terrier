@@ -108,7 +108,7 @@ class TestCaseOLTPBench(TestCase):
             XML=self.xml_config,
             FLAGS=self.oltp_flag,
             HISTOGRAMS=self.test_histogram_path)
-        self.test_command_cwd = constants.OLTPBENCH_GIT_LOCAL_PATH
+        self.test_command_cwd = constants.OLTPBENCH_TARGET_SNAPSHOT
         self.test_error_msg = constants.OLTPBENCH_TEST_ERROR_MSG
 
     def run_pre_test(self):
