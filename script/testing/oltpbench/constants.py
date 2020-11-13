@@ -2,6 +2,7 @@
 import os
 from datetime import datetime
 from util.constants import DIR_TMP
+import zipfile
 
 # git settings of OLTP
 OLTPBENCH_GIT_URL = "https://github.com/oltpbenchmark/oltpbench.git"
@@ -54,11 +55,13 @@ OLTPBENCH_ANT_COMMANDS = [
 OLTPBENCH_MVNW = os.path.join(OLTPBENCH_GIT_LOCAL_PATH, "mvnw")
 OLTPBENCH_MVN_BUILD = "{} clean package".format(OLTPBENCH_MVNW)
 OLTPBENCH_II_VERSION = '20.1.3'
-OLTPBENCH_II_BIN ='java -jar oltpbench2.jar'
+OLTPBENCH_II_BIN = 'java -jar oltpbench2.jar'
 OLTPBENCH_TARGET = os.path.join(OLTPBENCH_GIT_LOCAL_PATH, "target")
 OLTPBENCH_TARGET_SNAPSHOT = os.path.join(OLTPBENCH_TARGET, "oltpbench2-" + OLTPBENCH_II_VERSION + "-SNAPSHOT")
-OLTPBENCH_MVN_UNZIP = "unzip {}.zip".format(OLTPBENCH_TARGET_SNAPSHOT)
-OLTPBENCH_MVN_COMMANDS = [OLTPBENCH_MVN_BUILD, OLTPBENCH_MVN_UNZIP]
+OLTPBENCH_TARGET_ZIP = "{}.zip".format(OLTPBENCH_TARGET_SNAPSHOT)
+with zipfile.ZipFile(OLTPBENCH_TARGET_ZIP, 'r') as zip_ref:
+    zip_ref.extractall(OLTPBENCH_TARGET)
+OLTPBENCH_MVN_COMMANDS = [OLTPBENCH_MVN_BUILD]
 
 # API endpoints for Performance Storage Service
 # Each pair represents different environment. One could choose where the benchmark testing result will be uploaded to
