@@ -37,6 +37,7 @@ class TestOLTPBench(TestServer):
         rc, stdout, stderr = run_command(
             constants.OLTPBENCH_GIT_COMMAND,
             "Error: unable to git clone OLTP source code")
+        run_command(constants.OLTPBENCH_GIT_CHECKOUT)
         if rc != ErrorCode.SUCCESS:
             LOG.error(stderr)
             sys.exit(rc)
