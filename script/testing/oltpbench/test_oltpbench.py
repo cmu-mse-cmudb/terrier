@@ -43,24 +43,25 @@ class TestOLTPBench(TestServer):
         #     sys.exit(rc)
 
         # clone the repo
-        rc, stdout, stderr = run_command(constants.OLTPBENCH_GIT_COMMAND,
-                                         error_msg="Error: unable to git clone OLTP source code")
+        rc, stdout, stderr = run_command(
+            constants.OLTPBENCH_GIT_COMMAND,
+            error_msg="Error: unable to git clone OLTP source code")
         if rc != ErrorCode.SUCCESS:
             LOG.error(stderr)
             sys.exit(rc)
 
         # checkout the branch
-        rc, stdout, stderr = run_command(constants.OLTPBENCH_GIT_CHECKOUT,
-                                         cwd=constants.OLTPBENCH_GIT_LOCAL_PATH)
+        rc, stdout, stderr = run_command(
+            constants.OLTPBENCH_GIT_CHECKOUT,
+            cwd=constants.OLTPBENCH_GIT_LOCAL_PATH)
         if rc != ErrorCode.SUCCESS:
             LOG.error(stderr)
             sys.exit(rc)
 
-
     def build_oltp(self):
         for command in constants.OLTPBENCH_MVN_COMMANDS:
-            error_msg = "Error: unable to run \"{}\"".format(command)
-            rc, stdout, stderr = run_command(command, error_msg)
+            rc, stdout, stderr = run_command(
+                command, cwd=constants.OLTPBENCH_GIT_LOCAL_PATH)
             if rc != ErrorCode.SUCCESS:
                 LOG.error(stderr)
                 sys.exit(rc)
