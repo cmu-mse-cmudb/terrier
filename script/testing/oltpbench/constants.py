@@ -34,8 +34,11 @@ OLTPBENCH_DEFAULT_CONTINUE_ON_ERROR = False
 
 OLTPBENCH_DIR_TEST_RESULT = os.path.join(OLTPBENCH_GIT_LOCAL_PATH, "results")
 OLTPBENCH_TEST_ERROR_MSG = "Error: failed to complete oltpbench test"
-OLTPBENCH_DIR_CONFIG = os.path.join(OLTPBENCH_GIT_LOCAL_PATH, "postgres",
-                                    "config")
+OLTPBENCH_DIR_CONFIG = os.path.join(
+    OLTPBENCH_GIT_LOCAL_PATH,
+    "config",
+    "postgres",
+)
 
 # ant commands for OLTP
 OLTPBENCH_ANT_BUILD_FILE = os.path.join(OLTPBENCH_GIT_LOCAL_PATH, "build.xml")
