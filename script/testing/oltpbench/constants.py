@@ -2,13 +2,13 @@
 import os
 from datetime import datetime
 from util.constants import DIR_TMP
-import zipfile
 
 # git settings of OLTP
 OLTPBENCH_GIT_URL = "https://github.com/oltpbenchmark/oltpbench.git"
 OLTPBENCH_GIT_LOCAL_PATH = os.path.join(DIR_TMP, "oltpbench")
 OLTPBENCH_GIT_CLEAN_COMMAND = "rm -rf {}".format(OLTPBENCH_GIT_LOCAL_PATH)
-OLTPBENCH_GIT_COMMAND = "git clone {} {}".format(OLTPBENCH_GIT_URL, OLTPBENCH_GIT_LOCAL_PATH)
+OLTPBENCH_GIT_COMMAND = "git clone {} {}".format(OLTPBENCH_GIT_URL,
+                                                 OLTPBENCH_GIT_LOCAL_PATH)
 OLTPBENCH_GIT_CHECKOUT = "git checkout OLTP-Bench-II"
 
 # oltp default settings
@@ -57,10 +57,9 @@ OLTPBENCH_MVN_BUILD = "{} clean package".format(OLTPBENCH_MVNW)
 OLTPBENCH_II_VERSION = '20.1.3'
 OLTPBENCH_II_BIN = 'java -jar oltpbench2.jar'
 OLTPBENCH_TARGET = os.path.join(OLTPBENCH_GIT_LOCAL_PATH, "target")
-OLTPBENCH_TARGET_SNAPSHOT = os.path.join(OLTPBENCH_TARGET, "oltpbench2-" + OLTPBENCH_II_VERSION + "-SNAPSHOT")
+OLTPBENCH_TARGET_SNAPSHOT = os.path.join(
+    OLTPBENCH_TARGET, "oltpbench2-" + OLTPBENCH_II_VERSION + "-SNAPSHOT")
 OLTPBENCH_TARGET_ZIP = "{}.zip".format(OLTPBENCH_TARGET_SNAPSHOT)
-with zipfile.ZipFile(OLTPBENCH_TARGET_ZIP, 'r') as zip_ref:
-    zip_ref.extractall(OLTPBENCH_TARGET)
 OLTPBENCH_MVN_COMMANDS = [OLTPBENCH_MVN_BUILD]
 
 # API endpoints for Performance Storage Service
