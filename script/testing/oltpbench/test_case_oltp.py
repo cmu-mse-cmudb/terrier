@@ -176,7 +176,7 @@ class TestCaseOLTPBench(TestCase):
         root.find("username").text = constants.OLTPBENCH_DEFAULT_USERNAME
         root.find("password").text = constants.OLTPBENCH_DEFAULT_PASSWORD
         root.find("isolation").text = str(self.transaction_isolation)
-        root.find("batchsize").text = constants.OLTPBENCH_DEFAULT_BATCHSIZE
+        root.find("batchsize").text = str(constants.OLTPBENCH_DEFAULT_BATCHSIZE)
         root.find("scalefactor").text = str(self.scalefactor)
         root.find("terminals").text = str(self.terminals)
         for work in root.find("works").findall("work"):
