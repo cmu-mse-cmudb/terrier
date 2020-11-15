@@ -102,7 +102,7 @@ class TestCaseOLTPBench(TestCase):
 
         # oltpbench test command
         self.test_command = "{BIN} -b {BENCHMARK} -c {XML} -d {RESULTS} {FLAGS} -json-histograms {HISTOGRAMS}".format(
-            BIN= constants.OLTPBENCH_II_BIN,
+            BIN=constants.OLTPBENCH_II_BIN,
             BENCHMARK=self.benchmark,
             RESULTS=self.test_result_dir,
             XML=self.xml_config,
@@ -176,7 +176,8 @@ class TestCaseOLTPBench(TestCase):
         root.find("username").text = constants.OLTPBENCH_DEFAULT_USERNAME
         root.find("password").text = constants.OLTPBENCH_DEFAULT_PASSWORD
         root.find("isolation").text = str(self.transaction_isolation)
-        root.find("batchsize").text = str(constants.OLTPBENCH_DEFAULT_BATCHSIZE)
+        root.find("batchsize").text = str(
+            constants.OLTPBENCH_DEFAULT_BATCHSIZE)
         root.find("scalefactor").text = str(self.scalefactor)
         root.find("terminals").text = str(self.terminals)
         for work in root.find("works").findall("work"):
