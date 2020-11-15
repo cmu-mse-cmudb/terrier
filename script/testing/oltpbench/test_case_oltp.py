@@ -140,7 +140,7 @@ class TestCaseOLTPBench(TestCase):
         Create the database and load the data before the actual test execution.
         """
         cmd = "{BIN} -c {XML} -b {BENCHMARK} --create={CREATE} --load={LOAD}".format(
-            BIN=constants.OLTPBENCH_DEFAULT_BIN,
+            BIN=constants.OLTPBENCH_II_BIN,
             XML=self.xml_config,
             BENCHMARK=self.benchmark,
             CREATE=self.db_create,
