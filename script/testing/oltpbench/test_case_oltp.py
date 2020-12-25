@@ -103,13 +103,13 @@ class TestCaseOLTPBench(TestCase):
 
         # oltpbench test command
         self.test_command = "{BIN} -b {BENCHMARK} -c {XML} -d {RESULTS} {FLAGS} -json-histograms {HISTOGRAMS}".format(
-            BIN=constants.OLTPBENCH_DEFAULT_BIN,
+            BIN=constants.OLTPBENCH_II_BIN,
             BENCHMARK=self.benchmark,
             RESULTS=self.test_result_dir,
             XML=self.xml_config,
             FLAGS=self.oltp_flag,
             HISTOGRAMS=self.test_histogram_path)
-        self.test_command_cwd = constants.OLTPBENCH_GIT_LOCAL_PATH
+        self.test_command_cwd = constants.OLTPBENCH_TARGET_SNAPSHOT
         self.test_error_msg = constants.OLTPBENCH_TEST_ERROR_MSG
 
     def run_pre_test(self):
@@ -142,7 +142,7 @@ class TestCaseOLTPBench(TestCase):
         Create the database and load the data before the actual test execution.
         """
         cmd = "{BIN} -c {XML} -b {BENCHMARK} --create={CREATE} --load={LOAD}".format(
-            BIN=constants.OLTPBENCH_DEFAULT_BIN,
+            BIN=constants.OLTPBENCH_II_BIN,
             XML=self.xml_config,
             BENCHMARK=self.benchmark,
             CREATE=self.db_create,
@@ -173,12 +173,14 @@ class TestCaseOLTPBench(TestCase):
     def config_xml_file(self):
         xml = ElementTree.parse(self.xml_template)
         root = xml.getroot()
-        root.find("dbtype").text = constants.OLTPBENCH_DEFAULT_DBTYPE
+        root.find("type").text = constants.OLTPBENCH_DEFAULT_DBTYPE
         root.find("driver").text = constants.OLTPBENCH_DEFAULT_DRIVER
-        root.find("DBUrl").text = self.get_db_url()
+        root.find("url").text = self.get_db_url()
         root.find("username").text = constants.OLTPBENCH_DEFAULT_USERNAME
         root.find("password").text = constants.OLTPBENCH_DEFAULT_PASSWORD
         root.find("isolation").text = str(self.transaction_isolation)
+        root.find("batchsize").text = str(
+            constants.OLTPBENCH_DEFAULT_BATCHSIZE)
         root.find("scalefactor").text = str(self.scalefactor)
         root.find("terminals").text = str(self.terminals)
         for work in root.find("works").findall("work"):

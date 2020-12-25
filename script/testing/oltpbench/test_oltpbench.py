@@ -5,6 +5,7 @@ import subprocess
 import json
 import traceback
 import shutil
+import zipfile
 from util.constants import ErrorCode
 from util.constants import LOG
 from util.common import run_command
@@ -37,19 +38,41 @@ class TestOLTPBench(TestServer):
             sys.exit(rc)
 
     def download_oltp(self):
+        # rc, stdout, stderr = run_command(
+        #     constants.OLTPBENCH_GIT_COMMAND,
+        #     "Error: unable to git clone OLTP source code")
+        # run_command(constants.OLTPBENCH_GIT_CHECKOUT)
+        # if rc != ErrorCode.SUCCESS:
+        #     LOG.error(stderr)
+        #     sys.exit(rc)
+
+        # clone the repo
         rc, stdout, stderr = run_command(
             constants.OLTPBENCH_GIT_COMMAND,
-            "Error: unable to git clone OLTP source code")
+            error_msg="Error: unable to git clone OLTP source code")
+        if rc != ErrorCode.SUCCESS:
+            LOG.error(stderr)
+            sys.exit(rc)
+
+        # checkout the branch
+        rc, stdout, stderr = run_command(
+            constants.OLTPBENCH_GIT_CHECKOUT,
+            cwd=constants.OLTPBENCH_GIT_LOCAL_PATH)
         if rc != ErrorCode.SUCCESS:
             LOG.info(stdout.read())
             LOG.error(stderr.read())
             sys.exit(rc)
 
     def build_oltp(self):
-        for command in constants.OLTPBENCH_ANT_COMMANDS:
-            error_msg = "Error: unable to run \"{}\"".format(command)
-            rc, stdout, stderr = run_command(command, error_msg)
+        # build oltp
+        for command in constants.OLTPBENCH_MVN_COMMANDS:
+            rc, stdout, stderr = run_command(
+                command, cwd=constants.OLTPBENCH_GIT_LOCAL_PATH)
             if rc != ErrorCode.SUCCESS:
                 LOG.info(stdout.read())
                 LOG.error(stderr.read())
                 sys.exit(rc)
+
+        # unzip the built artifact
+        with zipfile.ZipFile(constants.OLTPBENCH_TARGET_ZIP, "r") as zip_ref:
+            zip_ref.extractall(constants.OLTPBENCH_TARGET)
